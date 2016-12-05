@@ -1,5 +1,5 @@
 variables
-% lenght
+% length
 l= 1
 % height and width
 h= 0.1
@@ -11,11 +11,17 @@ Ixx = (b*h^3)/12
 Iyy = Ixx
 % Polar moment of inertia
 J = 0.95*(Ixx+Iyy)
+% Young's Modulus
+E = 200e9
+% Shear Modulus
+G = 77.5e9
+% Density
+rho = 7860
 
 element properties
 % Beam format
 % E G   rho A1    A2  J1  J2  Ixx1 Ixx2   Iyy1 Iyy2
-steel A A J J Ixx Ixx Iyy Iyy
+E G rho A A J J Ixx Ixx Iyy Iyy
 
 %Note that these were defined above. I can use variables in my input file.
 % I also used "steel" as a property. WFEM has some of these predefined. 
