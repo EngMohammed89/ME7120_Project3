@@ -22,3 +22,5 @@ Mr=full(M(rows,columns)); % [150x150] Mass matrix
 
 % Saving M and K to *.mat file. 
 save('K_M_Newmark.mat','Kr','Mr')
+
+
