@@ -416,7 +416,7 @@ if strcmp(mode,'make')
 
   K(indices,indices)=K(indices,indices)+kg;
   M(indices,indices)=M(indices,indices)+mg;
-
+save ('K_M','K','M')
   % At this point we also know how to draw the element (what lines
   % and surfaces exist). For the beam3 element, 2 lines are
   % appropriate. Just add the pair of node numbers to the lines
@@ -425,7 +425,7 @@ if strcmp(mode,'make')
   lines(numlines+1,:)=[bn1 bn2];
 %   lines(numlines+2,:)=[bn3 bn2];
 
-  
+   
   
   %If I have 4 nodes that I want to use to represent a surface, I
   %do the following.
