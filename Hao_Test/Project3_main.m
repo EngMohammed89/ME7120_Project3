@@ -28,17 +28,29 @@ end
 Kr = K_2D(dof_all,dof_all);
 Mr = M_2D(dof_all,dof_all);
 
-
+%% Calculate Phi
 L = chol(Mr)';
 K_h = inv(L)*Kr*inv(L');
-[vectors, values]=eig(K_h)
-
-
+[vectors_V, values]=eig(K_h);
 
 % Sort the eigenvalues and eigenvecgtors in ascending order
-[values_sorted, index] = sort(diag(values));
-vectors_sorted = vectors(:,index);
+[values, index] = sort(diag(values));
+vectors_V = vectors_V(:,index);
 
+w = sqrt(values); % natural frequency
+
+Phi = (L')\vectors_V;
+
+%% Calculate C
+zeta = 0.02;
+C = Phi'\diag(2*zeta*w)*inv(Phi);
+
+% Testing Phi
+Phi'*Mr*Phi
+Phi'*Kr*Phi
+Phi'*C*Phi
+
+%% Newmark beta method
 
 
 
