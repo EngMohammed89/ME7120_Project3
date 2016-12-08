@@ -1,6 +1,6 @@
 % Newmark method
-load K_M_Newmark.mat
-load C.mat
+load K_M.mat % Load M and K matrieces
+[Kr, Mr, C] = find_C(K,M);
 
 Inv=eye(150,150); % Identity matrix will be used to take inverse of [150x150] matrix
 beta = 1/4; % beta
