@@ -1,4 +1,5 @@
 clear all
+close all
 load Project3_K_M.mat
 
 NumNode = 51;       % Number of Nodes
@@ -51,27 +52,76 @@ C = Phi'\diag(2*zeta*w)*inv(Phi);
 % Phi'*C*Phi
 
 %% Newmark beta method
-beta = 1/4;
-gama = 1/2;
-% Omega_crit = (zeta*(gama-1/2)+sqrt(gama/2-beta+zeta^2*(gama-1/2)^2))/(gama/2-beta);
-% detaT = 0.5*Omega_crit/max(w);
-t = 0.01; 
-step = 100;
-dt = 0.01/step;
 
-D = zeros(length(Kr),1);    % Displacement
-Dd = D;                     % Velocity
-Ddd = D;                    % Acceleration
+for caseID = 1:3
+    if caseID==1
+        % Average acceleration
+        beta = 1/4;
+        gama = 1/2;
+    elseif caseID==2
+        % Algorithmically damped
+        gama = 1/2+0.1;
+        beta = 1/4*(gama+1/2)^2+0.1;
+    elseif caseID==3
+        % Hilber-Hughes-Taylor
+        alpha = -0.1;
+        beta = 1/4*(1-alpha)^2;
+        gama = 1/2*(1-2*alpha);
+    elseif caseID==4
+        % Linear acceleration
+        beta = 1/6;
+        gama = 1/2;
+    elseif caseID==5
+        % Fox-Goodwin
+        beta = 1/12;
+        gama = 1/2;
+    end
 
-R = zeros(length(Kr),1);
-R(end-1) = 100000;  % Load vector
-for i = 1:step
-    Di = (1/(beta*dt^2)*Mr + gama/(beta*dt)*C +Kr)\...
-        (R+Mr*(1/(beta*dt^2)*D(:,i) + 1/(beta*dt)*Dd(:,i) + (1/(2*beta)-1)*Ddd(:,i)) ...
-        + C*( gama/(beta*dt)*D(:,i) + (gama/beta-1)*Dd(:,i) + (gama/beta-2)*dt/2*Ddd(:,i)));
-    Ddi = gama/(beta*dt)*(Di-
-    D = [D;Di];
-    
+%     Omega_crit = (zeta*(gama-1/2)+sqrt(gama/2-beta+zeta^2*(gama-1/2)^2))/(gama/2-beta);
+%     dt = Omega_crit/max(w);
+%     
+%     if isnan(dt)
+%         dt = 0.0001;
+%     end
+    dt = 0.0001;
+    t = 0.15;
+    step = floor(t/dt);
+
+    D = zeros(length(Kr),1);    % Displacement
+    Dd = D;                     % Velocity
+    Ddd = D;                    % Acceleration
+
+    R = zeros(length(Kr),1);
+    time = [0];
+    for i = 1:step
+        ti = dt*i;
+        if ti<=0.01
+            R(end-1) = 100000;  % Load vector
+        else
+            R = zeros(length(Kr),1);
+        end
+
+        Di = (1/(beta*dt^2)*Mr + gama/(beta*dt)*C +Kr)\...
+            (R+Mr*(1/(beta*dt^2)*D(:,i) + 1/(beta*dt)*Dd(:,i) + (1/(2*beta)-1)*Ddd(:,i)) ...
+            + C*( gama/(beta*dt)*D(:,i) + (gama/beta-1)*Dd(:,i) + (gama/beta-2)*dt/2*Ddd(:,i)));
+        Ddi = gama/(beta*dt)*(Di-D(:,i))-(gama/beta-1)*Dd(:,i)-dt*(gama/(2*beta)-1)*Ddd(:,i);
+        Dddi = 1/(beta*dt^2)*(Di-D(:,i)-dt*Dd(:,i))-(1/(2*beta)-1)*Ddd(:,i);
+        D = [D,Di];
+        Dd = [Dd,Ddi];
+        Ddd = [Ddd,Dddi];
+        time = [time,ti];
+
+    end
+    D;
+    Dd;
+    Ddd;
+
+    % plotting
+    plot(time,D(121,:),'LineWidth',3);
+    xlabel('t(s)');
+    ylabel('\theta_{z41}(rad)');
+    title('Modal analysis  \zeta=0.02')
+    hold on
 end
 
 
