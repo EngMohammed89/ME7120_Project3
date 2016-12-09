@@ -1,14 +1,14 @@
 % Newmark method
 load K_M.mat % Load M and K matrieces
 [Kr, Mr, C] = find_C(K,M);
-
+C=0;
 Inv=eye(150,150); % Identity matrix will be used to take inverse of [150x150] matrix
-beta = 1/4; % beta
-gamma = 1/2; % gamma
+beta = 0.36; % beta
+gamma = 0.7; % gamma
 dt = 0.0001; % delta t
-tf = 0.13; % Final t
-t=0:dt:tf; % Time
-n=tf/dt;
+tf = 0.15; % Final t
+n=floor(tf/dt);
+t=zeros(n,1);
 
 D=zeros(150,n);
 DD=zeros(150,n);
@@ -24,6 +24,7 @@ Rt=zeros(150,1); % Force, R(t)
 
 
 for i=1:n
+
   % Impulse loading applied at node 51 starts form t=0 to t=0.01s.       
       if t(i)<=0.01
             Rt(149,1) = 100000;
@@ -40,7 +41,7 @@ for i=1:n
    DD(:,i+1) = (gamma/(beta*dt))*(D(:,i+1) - D(:,i)) - (gamma/beta - 1)*DD(:,i) -...
             dt*(gamma/(2*beta) - 1)*DDD(:,i);     
            
-        
+  t(i+1)=t(i)+dt;      
 end
 
 figure(1)
