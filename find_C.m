@@ -1,4 +1,4 @@
-function [Kr Mr C] = find_C(K,M)
+function [Kr Mr C wmax] = find_C(K,M)
 % This function is for finding reduced M & K matrieces and obtaining C matrix
 NumNode = 51;       % Number of Nodes
 
@@ -37,6 +37,7 @@ K_h = L\Kr/L';
 vectors_V = vectors_V(:,index);
 
 w = sqrt(values); % natural frequencies
+wmax=w(150); % Omega max
 
 Phi = (L')\vectors_V;
 

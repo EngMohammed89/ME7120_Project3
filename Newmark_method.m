@@ -1,6 +1,6 @@
 % Newmark method
 load K_M.mat % Load M and K matrieces
-[Kr, Mr, C] = find_C(K,M); 
+[Kr, Mr, C, wmax] = find_C(K,M); 
 
 Inv=eye(150,150); % Identity matrix will be used to take inverse of [150x150] matrix
 
@@ -9,12 +9,12 @@ beta = 1/4; % beta
 gamma = 1/2; % gamma
 
 % % Linear acceleration
-% beta = 1/2; % beta
-% gamma = 1/6; % gamma
+% beta = 1/6; % beta
+% gamma = 1/2; % gamma
 
 % % Fox-Goodwin
-% beta = 1/2; % beta
-% gamma = 1/12; % gamma
+% beta = 1/12; % beta
+% gamma = 1/2; % gamma
 
 % % Algorithmically damped
 % gamma = 0.6; % gamma
@@ -25,23 +25,27 @@ gamma = 1/2; % gamma
 % beta = (1/4)*(1-alpha)^2; % beta
 % gamma = 0.7; % gamma
 
-dt = 0.0001; % delta t
-tf = 0.14; % Final t
-n=floor(tf/dt);
+% % Finding dt using omega critical. use this for Linear acceleration and
+% % Fox-Goodwin methods.
+% Z=0.02;
+% Ocrit=(Z*(gamma-0.5)+sqrt((gamma/2)-beta+(Z^2)*(gamma-0.5)^2))/(gamma/2-beta);
+% dt=Ocrit/wmax;
+
+dt = 0.0001; % delta t. use this for above methods (1st, 4th and 5th).
+tf = 0.15; % Final t
+n=floor(tf/dt); % Steps
 t=zeros(n,1); % Time
 
 D=zeros(150,n); % Displacement
 DD=zeros(150,n); % Velocity
 DDD=zeros(150,n); % Acceleration
 
-% Initial conditions
+% Initial conditions for Disp., vel., and acc.
 D(:,1) = zeros(150,1);
 DD(:,1) = zeros(150,1);
 DDD(:,1) = zeros(150,1);
 
 Rt=zeros(150,1); % Force, Rt
-
-
 
 for i=1:n
 
