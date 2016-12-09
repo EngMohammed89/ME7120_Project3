@@ -52,7 +52,6 @@ C = Phi'\diag(2*zeta*w)*inv(Phi);
 % Phi'*C*Phi
 
 %% Newmark beta method
-
 for caseID = 1:3
     if caseID==1
         % Average acceleration
@@ -116,14 +115,20 @@ for caseID = 1:3
     Dd;
     Ddd;
 
-    % plotting
-    plot(time,D(121,:),'LineWidth',3);
-    xlabel('t(s)');
-    ylabel('\theta_{z41}(rad)');
-    title('Modal analysis  \zeta=0.02')
+    %% plotting
+    if caseID == 1
+        plot(time,D(121,:),'LineWidth',3,'DisplayName','Average acceleration');
+    elseif caseID == 2
+        plot(time,D(121,:),'LineWidth',3,'DisplayName','Algorithmically damped');
+    elseif caseID == 3
+        plot(time,D(121,:),'LineWidth',3,'DisplayName','Hilber-Hughes-Taylor');
+    end
+    xlabel('t(s)','FontSize',16);
+    ylabel('\theta_{z41}(rad)','FontSize',16);
+    title('Modal analysis  \zeta=0.02','FontSize',16)
     hold on
 end
-
+legend('show')
 
 
 
