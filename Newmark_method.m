@@ -1,25 +1,45 @@
 % Newmark method
 load K_M.mat % Load M and K matrieces
-[Kr, Mr, C] = find_C(K,M);
-C=0;
-Inv=eye(150,150); % Identity matrix will be used to take inverse of [150x150] matrix
-beta = 0.36; % beta
-gamma = 0.7; % gamma
-dt = 0.0001; % delta t
-tf = 0.15; % Final t
-n=floor(tf/dt);
-t=zeros(n,1);
+[Kr, Mr, C] = find_C(K,M); 
 
-D=zeros(150,n);
-DD=zeros(150,n);
-DDD=zeros(150,n);
+Inv=eye(150,150); % Identity matrix will be used to take inverse of [150x150] matrix
+
+% Average acceleration
+beta = 1/4; % beta
+gamma = 1/2; % gamma
+
+% % Linear acceleration
+% beta = 1/2; % beta
+% gamma = 1/6; % gamma
+
+% % Fox-Goodwin
+% beta = 1/2; % beta
+% gamma = 1/12; % gamma
+
+% % Algorithmically damped
+% gamma = 0.6; % gamma
+% beta = (1/4)*(gamma+0.5)^2; % beta
+
+% % Hilber-hughes-Taylor (alpha-method)
+% alpha =-0.2; % -1/3 <= alpha <=0
+% beta = (1/4)*(1-alpha)^2; % beta
+% gamma = 0.7; % gamma
+
+dt = 0.0001; % delta t
+tf = 0.14; % Final t
+n=floor(tf/dt);
+t=zeros(n,1); % Time
+
+D=zeros(150,n); % Displacement
+DD=zeros(150,n); % Velocity
+DDD=zeros(150,n); % Acceleration
 
 % Initial conditions
 D(:,1) = zeros(150,1);
 DD(:,1) = zeros(150,1);
 DDD(:,1) = zeros(150,1);
 
-Rt=zeros(150,1); % Force, R(t)
+Rt=zeros(150,1); % Force, Rt
 
 
 
@@ -45,14 +65,20 @@ for i=1:n
 end
 
 figure(1)
+grid on; hold on
 plot(t,D(121,:)) % Displacement of the rotational DOF at node 41
 ylabel('$\theta z41$ (rad/s)','interpreter','latex')
 xlabel('t (s)','interpreter','latex')
+title('Average acceleration')
 figure(2)
+grid on; hold on
 plot(t,DD(121,:)) % Velocity of the rotational DOF at node 41
 ylabel('$\dot{\theta}z41$ (rad/s)','interpreter','latex')
 xlabel('t (s)','interpreter','latex')
+title('Average acceleration')
 figure(3)
-plot(t,DDD(121,:)) % acceleration of the rotational DOF at node 41
+grid on; hold on
+plot(t,DDD(121,:)) % Acceleration of the rotational DOF at node 41
 ylabel('$\ddot{\theta}z41$ (rad/s)','interpreter','latex')
 xlabel('t (s)','interpreter','latex')
+title('Average acceleration')

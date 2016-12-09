@@ -1,5 +1,5 @@
 function [Kr Mr C] = find_C(K,M)
-
+% This function is for finding reduced M & K matrieces and obtaining C matrix
 NumNode = 51;       % Number of Nodes
 
 %% K and M in 3D (306*306)
@@ -29,18 +29,18 @@ Mr = M_2D(dof_all,dof_all);
 
 %% Calculate Phi
 L = chol(Mr)';
-K_h = inv(L)*Kr*inv(L');
+K_h = L\Kr/L';
 [vectors_V, values]=eig(K_h);
 
-% Sort the eigenvalues and eigenvecgtors in ascending order
+% Sort the eigenvalues and eigenvectors in ascending order
 [values, index] = sort(diag(values));
 vectors_V = vectors_V(:,index);
 
-w = sqrt(values); % natural frequency
+w = sqrt(values); % natural frequencies
 
 Phi = (L')\vectors_V;
 
-%% Calculate C
+%% Calculate C matrix
 zeta = 0.02;
-C = Phi'\diag(2*zeta*w)*inv(Phi);
+C = Phi'\diag(2*zeta*w)/Phi;
 end
